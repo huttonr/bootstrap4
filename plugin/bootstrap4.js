@@ -212,11 +212,9 @@ class BootstrapCompiler {
         // Generate the mixins file because it doesn't exist
         let src = getAsset(path.join(scssPath, '_mixins.scss'));
         src = src.substr(Math.max(src.indexOf('\n\n'), 0));
-        src = src.replace(/\@import\s+\"mixins\/(.+)\"\;?/g, (match, mixin) => {
-          let fullPath = path.join(scssPath, 'mixins', '_' + mixin + '.scss');
-
-          return getAsset(fullPath);
-        });
+        src = src.replace(/\@import\s+\"mixins\/(.+)\"\;?/g, (match, mixin) =>
+          getAsset(path.join(scssPath, 'mixins', `_${ mixin }.scss`))
+        );
         src = mixinFilesInstruction + src;
 
         fs.writeFileSync(path.join(settingsPathDir, bootstrapMixins), src);
