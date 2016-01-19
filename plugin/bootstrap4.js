@@ -1,7 +1,7 @@
 // npm
 const fs =    Plugin.fs;
 const path =  Plugin.path;
-//const sass =  Npm.require('node-sass');  Using meteor wrapped node-sass package instead
+const sass =  Npm.require('node-sass');
 
 
 // Paths and filenames
