@@ -2,7 +2,7 @@
 Package.describe({
   name: 'huttonr:bootstrap4',
   summary: 'Modular, customizable Bootstrap 4.',
-  version: '4.0.0_11',
+  version: '4.0.0_12',
   git: 'https://github.com/huttonr/bootstrap4',
   documentation: 'README.md'
 });
@@ -20,7 +20,7 @@ Package.registerBuildPlugin({
     'underscore@1.0.4',
     'ecmascript@0.1.6',
     'babel-compiler@5.8.24_1',
-    'huttonr:bootstrap4-assets@4.0.0_8'
+    'huttonr:bootstrap4-assets@4.0.0_9'
   ],
   sources: [
     'plugin/bootstrap4.js'

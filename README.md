@@ -1,6 +1,4 @@
-### Now featuring Bootstrap 4 Alpha 2
-
-## Bootstrap 4 (Alpha) for Meteor
+## Bootstrap 4 (Alpha 2) for Meteor
 Modular, configurable, customizable.
 
 ## How to use
@@ -18,4 +16,6 @@ The package will automatically populate the file if it is empty.
 
 #### `javascript`
 `namespace` **String** (default: 'Bootstrap')  The namespace to include the Bootstrap js classes in (you can use 'global').  
+`expose` **Boolean** (default: *false*)  Enable to expose the raw bootstrap javascript.  
+`compileExposed` **Boolean** (default: *false*)  If exposing the javascript, whether to compile the ES6 down or not.  
 `modules` **Object**  Enable or disable specific bootstrap js modules. *(The listed order of these are unimportant)*
