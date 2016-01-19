@@ -44,7 +44,7 @@ const rawFileInstruction =
 
 
 
-
+// Asset functions
 const getAsset = _bootstrapGetAsset
 const getJsFilenames = _bootstrapGetJsList
 
@@ -53,7 +53,7 @@ const getJsFilenames = _bootstrapGetJsList
 // Register the compiler for the bootstrap-settings json file
 Plugin.registerCompiler({
   extensions: [],
-  filenames: [bootstrapSettings/*, bootstrapVariables, bootstrapMixins*/]
+  filenames: [bootstrapSettings, bootstrapVariables, bootstrapMixins]
 }, () => new BootstrapCompiler)
 
 
@@ -90,14 +90,8 @@ class BootstrapCompiler {
       const settingsPathDir = path.dirname(settingsFilePath)
 
 
-      // Get the settings data
-      const settingsContents = settingsFile.getContentsAsString()
-      let settings
-      if (settingsContents.trim()) {
-        settings = JSON.parse(settingsContents)
-      } else {
-        // Populate the settings json file because it empty
-
+      // Function to build the default settings json
+      function buildSettingsFileJson() {
         // Load in the template settings file
         let src = getAsset(path.join(defaultsPath, 'bootstrap-settings.default.json'))
 
@@ -139,11 +133,37 @@ class BootstrapCompiler {
         src = src.replace(/\n\s*\/\*SCSS_MODULES\*\//, '\n' + scssJson)
                  .replace(/\n\s*\/\*JS_MODULES\*\//, '\n' + jsJson)
 
+        return src
+      }
+
+
+      // Get the settings data
+      const settingsContents = settingsFile.getContentsAsString()
+      let settings
+      if (settingsContents.trim()) {
+        settings = JSON.parse(settingsContents)
+      } else {
+        // Populate the settings json file because it empty
+        let src = buildSettingsFileJson()
+
         fs.writeFileSync(settingsFilePath, src)
 
         settings = JSON.parse(src)
       }
 
+
+      // Detect huttonr:bootstrap3 upgrade
+      if (settings.less) {
+        // Overwrite the old settings json file with the default one
+        let src = buildSettingsFileJson()
+
+        fs.writeFileSync(settingsFilePath, src)
+
+        settings = JSON.parse(src)
+      }
+
+
+      // Settings defaults
       function def(obj, name, val) { if (obj[name] === undefined) obj[name] = val }
 
       def(settings, 'scss', {})
@@ -159,6 +179,8 @@ class BootstrapCompiler {
       def(settings.javascript, 'compileExposed', false)
       def(settings.javascript, 'modules', {})
 
+
+      // Handle the namespace
       if (!settings.javascript.namespace ||
           settings.javascript.namespace === 'false' ||
           !_.isString(settings.javascript.namespace) ||
@@ -331,6 +353,7 @@ class BootstrapCompiler {
       // Babel compile function
       function compileJs(src, filename) {
         let babelOptions = Babel.getDefaultOptions()
+        babelOptions.externalHelpers = false
 
         babelOptions.sourceMap = true
         babelOptions.filename = filename

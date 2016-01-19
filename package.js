@@ -2,7 +2,7 @@
 Package.describe({
   name: 'huttonr:bootstrap4',
   summary: 'Modular, customizable Bootstrap 4.',
-  version: '4.0.0_12',
+  version: '4.0.0_13',
   git: 'https://github.com/huttonr/bootstrap4',
   documentation: 'README.md'
 });
