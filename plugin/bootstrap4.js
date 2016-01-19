@@ -1,7 +1,7 @@
 // npm
 const fs =    Plugin.fs;
 const path =  Plugin.path;
-const Sass =  Npm.require('node-sass');
+//const sass =  Npm.require('node-sass');  Using meteor wrapped node-sass package instead
 
 
 // Paths and filenames
@@ -9,6 +9,7 @@ const assetsPath =        path.join('assets');
 const defaultsPath =      path.join(assetsPath, 'defaults');
 const scssPath =          path.join(assetsPath, 'bootstrap', 'scss');
 const jsPath =            path.join(assetsPath, 'bootstrap', 'js', 'src');
+const tetherJsPath =      path.join(assetsPath, 'tether', 'dist', 'js', 'tether.js');
 
 const jsLoadFirst = [ // Specifies which js modules should be loaded first due to other js modules depending on them
   'util.js',
@@ -54,7 +55,7 @@ class BootstrapCompiler {
 
     // Loop through and find the settings file
     _.each(filesFound, file => {
-      let fn = path.basename(file.getDisplayPath());
+      let fn = path.basename(path.join(file.getDisplayPath()));
       if (fn === bootstrapSettings) {
         if (settingsFile)
           throw new Error('You cannot have more than one ' + bootstrapSettings + ' in your Meteor project.');
@@ -227,7 +228,7 @@ class BootstrapCompiler {
 
 
       // Render the scss into css using a custom importer
-      let rendered = Sass.renderSync({
+      let rendered = sass.renderSync({
         data: scssPrefix + _.map(scssModules, fn => { return '@import "' + fn + '";'; }).join('\n'),
         importer: (url, prev, done) => {
           // I will admit that this regexp could have more possible cases, but this works for the current bootstrap
@@ -289,11 +290,21 @@ class BootstrapCompiler {
       src = src.replace(/import\s+(?:\S+)\s+from\s+\'.+\'/g, '');
 
 
+      // Add in tether if tooltips is specified
+      if (jsModules.indexOf('tooltip.js') >= 0) {
+        src = `if (typeof window.Tether === "undefined") {
+                 ${ getAsset(tetherJsPath) }
+               }
+
+               ${ src.replace('window.Tether === undefined', 'typeof Tether === "undefined"')}`;
+      }
+
+
       // Build the exports
       if (settings.javascript.namespace !== false) {
         src = `if (typeof window. ${ settings.javascript.namespace } === "undefined")
-                window. ${ settings.javascript.namespace } = {};
-                ${ src }`;
+                 window. ${ settings.javascript.namespace } = {};
+                 ${ src }`;
 
         src = src.replace(
           /export\s+default\s+(\S+)/g,
@@ -302,8 +313,8 @@ class BootstrapCompiler {
       }
 
       src = `if (Meteor.isClient) {
-              ${ src }
-            }`;
+               ${ src }
+             }`;
 
 
       // Compile the ES6
