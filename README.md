@@ -1,3 +1,5 @@
+**Please note that this package is currently unmaintained.  PRs are welcome.**
+
 ## Bootstrap 4 (Alpha 2) for Meteor
 Modular, configurable, customizable.
 
