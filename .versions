@@ -1,0 +1,11 @@
+babel-compiler@6.8.4
+babel-runtime@0.1.9_1
+ecmascript@0.4.7
+ecmascript-runtime@0.2.12
+huttonr:bootstrap4@4.0.0_15
+huttonr:bootstrap4-assets@4.0.0_9
+meteor@1.1.16
+modules@0.6.5
+modules-runtime@0.6.5
+promise@0.7.3
+underscore@1.0.9
