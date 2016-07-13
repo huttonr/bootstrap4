@@ -353,12 +353,11 @@ class BootstrapCompiler {
       // Babel compile function
       function compileJs(src, filename) {
         let babelOptions = Babel.getDefaultOptions()
-        babelOptions.externalHelpers = false
 
         babelOptions.sourceMap = true
         babelOptions.filename = filename
         babelOptions.sourceFileName = path.join('/', filename)
-        babelOptions.sourceMapName = path.join('/', filename + '.map')
+        babelOptions.sourceMapTarget = path.join('/', filename + '.map')
         return Babel.compile(src, babelOptions) || {} // XXX Error catching would be better...
       }
 
