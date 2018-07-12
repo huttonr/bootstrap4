@@ -17,9 +17,9 @@ Package.onUse(function(api) {
 Package.registerBuildPlugin({
   name: 'build-bootstrap4',
   use: [
-    'underscore@1.0.4',
-    'ecmascript@0.4.7',
-    'babel-compiler@6.8.4',
+    'underscore@1.0.10',
+    'ecmascript@0.11.1',
+    'babel-compiler@7.7.1',
     'huttonr:bootstrap4-assets@4.0.0_9'
   ],
   sources: [
